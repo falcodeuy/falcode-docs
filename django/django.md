@@ -6,5 +6,4 @@ has_children: true
 permalink: /django/
 ---
 
-
 # Falcode documentation for django

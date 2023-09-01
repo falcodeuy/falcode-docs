@@ -6,11 +6,19 @@ nav_order: 2
 permalink: /django/code-style
 ---
 
-# Code style guide
+# Code style guides
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 ## The use of quotes
 
-Use single quotes always except when the string itself has a single quote, examples:
+Use single quotes always except when the string itself has a single quote, for example:
 
 ```python
 sentence = "It's a beautiful day."

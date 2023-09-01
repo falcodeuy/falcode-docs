@@ -1,8 +1,13 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: Falcode docuentation
+description: Falcode documentation page for organization information and standards.
 theme: just-the-docs
 
 url: https://just-the-docs.github.io
 
 aux_links:
   Template Repository: https://github.com/just-the-docs/just-the-docs-template
+
+logo: assets/Logo-Full.png
+favicon_ico: assets/Logo-Full.png
+
+search_enabled: true
