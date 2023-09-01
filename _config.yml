@@ -7,7 +7,7 @@ url: https://just-the-docs.github.io
 aux_links:
   Template Repository: https://github.com/just-the-docs/just-the-docs-template
 
-logo: assets/Logo-Full.png
-favicon_ico: assets/Logo-Full.png
+logo: "/assets/Logo-Full.png"
+favicon_ico: "/assets/Iso-Full.png"
 
 search_enabled: true
