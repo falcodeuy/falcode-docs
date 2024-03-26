@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Projects structure
-parent: Django
+title: Files and folders
+parent: Project structure
+grand_parent: Django
 nav_order: 1
-permalink: /django/project-structure
 ---
 
-# Project structure
+# Main organization
 
 ## Files and folder structure
 
@@ -18,12 +18,18 @@ Out projects structure has this key points:
   
 - The `backend` folder contains the root `urls.py` and `settings.py`, along with other main configurations like `wsgi.py`.
 
-```
+- The `template` directory contains only base templates, each specific template should be in the `template` directory for the apps.
+
+- Each app can contain a `services` folder for complex functionality over the models, serializers or views, to avoid large code on these files, for more detail check "code-style".
+
+```txt
 project_name/
 ├── manage.py
 ├── apps/
 │ ├── app1/
 │ │ ├── migrations/
+│ │ ├── templates/
+│ │ ├── services/
 │ │ ├── static/
 │ │ ├── __init__.py
 | | ├── admin.py
@@ -44,9 +50,23 @@ project_name/
 | ├── urls.py
 | ├── wsgi.py
 └── ...
+├── templates/
 ```
 
+## Environment variables
+
 Create .env file to read any variable that depends on the working environment or need to be hidden.
+
+```bash
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=minapp
+POSTGRES_USER=crhistyan
+POSTGRES_PASSWORD=C157268493s
+DJANGO_ENV=local
+```
+
+This files must be hidden and have an example `.env.example` with the names of the environment variables to be filled and some example. To manage default values on the project
 
 ## Settings file
 

@@ -2,8 +2,8 @@
 layout: default
 title: Code style
 parent: Django
-nav_order: 2
-permalink: /django/code-style
+has_children: true
+nav_order: 3
 ---
 
 # Code style guides

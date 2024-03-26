@@ -2,8 +2,7 @@
 layout: default
 title: Tools
 parent: Django
-nav_order: 3
-permalink: /django/tools
+nav_order: 4
 ---
 
 1. **Linters and Code Quality Checkers**:

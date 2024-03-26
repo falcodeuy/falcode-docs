@@ -8,4 +8,4 @@ permalink: /django/
 
 # Django documentation
 
-This documentation includes information about Flacode tools and standards for django projects.
+This documentation includes information about Falcode tools and standards for Django projects.
