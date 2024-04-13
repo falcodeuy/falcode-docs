@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Configure site certificates
+title: Site certificates
 parent: Project configuration
 grand_parent: Django
-nav_order: 3
+nav_order: 2
 ---
 
 # Certificates
