@@ -20,15 +20,6 @@ First, you need to install `redis` and `django-redis` packages. `django-redis` i
 pip install redis django-redis
 ```
 
-Add `django-redis` to your apps:
-
-```python
-INSTALLED_APPS = [
-    ...
-    'django_redis',
-]
-```
-
 ### Step 2: Configure Caching
 
 Add the following configuration to your Django settings file (`settings.py`) if you need redis for cache. This example sets up Redis as the caching backend.
@@ -84,12 +75,11 @@ or if you are using docker you can add the next configuration to the docker comp
 services:
   redis:
     image: redis
-    command: redis-server --appendonly yes --requirepass yourverystrongpassword
+    command: redis-server --appendonly yes
     volumes:
         - ./data:/data
     ports:
         - "6379:6379"
-    restart: unless-stopped
     env_file:
         - .env
 ```

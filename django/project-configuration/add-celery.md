@@ -130,11 +130,11 @@ Description=Celery Service
 After=network.target
 
 [Service]
-Type=forking
+Type=simple
 User=your_user
 Group=your_group
 WorkingDirectory=/path/to/your/django/project
-Environment="PATH=/path/to/your/virtualenv"
+Environment="PATH=/path/to/your/virtualenv/bin"
 ExecStart=/path/to/your/virtualenv/bin/celery -A your_project_name worker --loglevel=info
 ExecStop=/path/to/your/virtualenv/bin/celery -A your_project_name control shutdown
 Restart=always

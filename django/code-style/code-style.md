@@ -45,9 +45,37 @@ sentence = "It's a beautiful day."
 
 ## Admin
 
-- Forzar poner nombre en los fields
-- Poner campos de help_text
-- Definir verbose name y verbose name plural
-- Definir __str__
+* Always specify display name in order to have the basic attributes
+* Always specify list_per_page for performance
+* Add search for admin 
 
-- Usar la clase custom de admin
+### Using a Custom Admin Class
+
+- **Custom Admin Class**: Extend the default admin interface using a custom admin class. This allows you to customize admin panels, control which fields are displayed, customize how lists are filtered, apply ordering, group fields logically, and much more. Django’s modularity allows you to override or add to the configuration of model data as it’s presented in the admin interface, enhancing both usability and functionality.
+
+Example Django model showing these implementations:
+
+```python
+from django.db import models
+from django.contrib import admin
+
+class MyModel(models.Model):
+    name = models.CharField(max_length=100, help_text="Enter the full name.")
+    description = models.TextField(help_text="Enter a detailed description.")
+
+    class Meta:
+        verbose_name = "My Model"
+        verbose_name_plural = "My Models"
+
+    def __str__(self):
+        return self.name
+
+class MyModelAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+    search_fields = ['name']
+
+# Register your models and admin class with the admin site
+admin.site.register(MyModel, MyModelAdmin)
+```
+
+This example illustrates how to make a Django model and its corresponding admin customization for enhanced interaction through the Django admin site.
