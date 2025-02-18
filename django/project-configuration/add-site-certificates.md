@@ -187,7 +187,7 @@ contrab -e
 Now, add the following line, replacing your `Docker` compose file path:
 
 ```bash
-0 5 1 */2 *  /usr/bin/docker compose -f /var/docker/docker-compose.yml run --rm certbot renew
+0 5 1 */2 *  /usr/bin/docker compose -f /home/ubuntu/repository/docker-compose.prod.yml run --rm certbot renew --force-renew && /usr/bin/docker compose -f /home/ubuntu/repository/docker-compose.prod.yml restart nginx
 ```
 
-Ensure `/usr/bin/docker` exists and your path to the Docker file is correct. Save the file. This will run the renewal process on the first day at 5 AM every two months.
+Ensure `/usr/bin/docker` exists and your path to the Docker file is correct, this command also restart `nginx`, if you are using other service replace the command after `&&`. Save the file. This will run the renewal process on the first day at 5 AM every two months.
