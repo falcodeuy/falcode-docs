@@ -6,6 +6,6 @@ has_children: true
 permalink: /django/
 ---
 
-# Django documentation
+## Django documentation
 
 This documentation includes information about Falcode tools and standards for Django projects.
