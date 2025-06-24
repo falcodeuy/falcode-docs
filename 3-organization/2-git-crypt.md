@@ -124,3 +124,19 @@ git-crypt unlock
 ```
 
 Now you can see and use `.production.env` or other encrypted files.
+
+#### (Optional) Write the private to file
+
+If you need the private key for Github actions run:
+
+```bash
+gpg --armor --export-secret-keys D439AF0F1C6343D0DF266B0E78D063180593A3BB > gpg-private-key.asc
+```
+
+Where the ID is obtained with:
+```bash
+gpg --list-secret-keys --keyid-format LONG
+```
+
+Copy the `gpg-private-key.asc` content into secret for Github.
+
