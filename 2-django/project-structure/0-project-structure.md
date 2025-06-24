@@ -4,7 +4,6 @@ title: Project structure
 parent: Django
 nav_order: 1
 has_children: true
-has_toc: true
 ---
 
 # Projct structure

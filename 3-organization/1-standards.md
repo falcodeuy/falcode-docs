@@ -6,7 +6,7 @@ parent: Organization
 permalink: /organization/standards
 ---
 
-# Organization Standards
+## Organization Standards
 
 ## Trello
 
