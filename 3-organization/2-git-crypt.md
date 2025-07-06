@@ -99,19 +99,23 @@ Use the **full fingerprint** (the long one on the second line).
 
 #### 3. Add the user to the repository
 
-```bash
-git-crypt add-gpg-user ABCD1234EF567890ABCDEF1234567890ABCD1234
-```
+Share your public key to someone with access
 
-This adds your public key to the repository so you can decrypt encrypted files.
+```bash
+gpg --export --armor "someone@something.com" > public_key.asc
+```
 
 ---
 
-#### 4. Commit and push the access grant
+#### 4. Add your user
+
+Request someone with access to add your user with the public key
 
 ```bash
-git add .git-crypt/
-git commit -m "Add myself as authorized git-crypt user"
+gpg --import public_key.asc
+git-crypt add-gpg-user --trusted someone@something.com
+git add .git-crypt/keys
+git commit -m "Added user to git-crypt"
 git push
 ```
 
