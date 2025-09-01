@@ -1,10 +1,11 @@
 title: Falcode docuentation
-description: Falcode documentation page for organization information and standards.
+description: Falcode documentation page for organization information and technical standards.
 theme: just-the-docs
+color_scheme: dark
 
 url: https://docs.falcode.dev/
 
-logo: "/assets/Logo-Full.png"
+logo: "/assets/logo.png"
 favicon_ico: "/assets/Iso-Full.png"
 
 search_enabled: true
