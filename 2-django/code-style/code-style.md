@@ -9,6 +9,7 @@ nav_order: 3
 # Code style guides
 
 ## Table of contents
+
 {: .no_toc .text-delta }
 
 1. TOC
@@ -18,64 +19,104 @@ nav_order: 3
 
 ## The use of quotes
 
-Use single quotes always except when the string itself has a single quote, for example:
+Use single quotes always, except when the string itself contains a single quote:
 
 ```python
 sentence = "It's a beautiful day."
 ```
 
-## Serializers
+## Serializers (DRF)
 
-- Serializers only have validation or basic creation and update logic. If a model need complex logic on any request make 
-- Always use serializers for request body (Avoid read and validate manually)
-- User `PrimaryKeyRelatedField` for id validation of nested models
+- Keep serializers thin: validation, normalization, and input/output mapping.
+- Serializers can include basic create/update behavior, but business logic and side effects belong in services.
+- Validate all input (body and query params) with serializers before using it.
+- For id-based relations, use typed relational fields (for example, `PrimaryKeyRelatedField`) instead of manual parsing.
+- Business logic must consume `validated_data`; do not drive business decisions from raw `request.data`.
 
-## Views
+## Views / ViewSets
 
-- Estrcutura:
-    - Lectura con serializer
-    - Logica de negocio (encapsulada)
-    - Respuesta con serializer (o custom)
-- Always use views from rest framework `viewsets` when is possible, if not, use `generics` views from rest framework and override methods.
+- Put all possible validations in serializers; in views, keep only validations that cannot be modeled directly in serializers.
+- Keep a clear view structure:
+    - Validation
+    - Service call
+    - Response
+- Views orchestrate authentication/permissions, serializer invocation, and HTTP response.
+- Thin-layer rule: business logic and side effects go to modules in the `services` folder.
+- Prefer DRF `ViewSet` and generic views when applicable, avoiding unnecessary ad-hoc views.
+- Keep responses consistent (stable API contract shape).
 
 ## Enums (Choices in Django)
 
-- Usar IntegerChoice o TextChoices
-- En el serializer usar ChoiceFieldWithDisplayName
+- Use `IntegerChoices` or `TextChoices`.
+- Use `ChoiceFieldWithDisplayName` in serializers.
 
 ## Admin
 
-* Always specify display name in order to have the basic attributes
-* Always specify list_per_page for performance
-* Add search for admin 
+- Define `list_display` with relevant base attributes.
+- Define `list_per_page` for performance.
+- Define `search_fields` to improve admin search.
+- Use `unfold.admin.ModelAdmin` as the default admin base in all projects.
+- Use `autocomplete_fields` when a relation (`ForeignKey`/`ManyToMany`) points to another model with many records.
+- Use `AutocompleteSelectFilter` in `list_filter` when filtering by relations to other models with many options.
 
-### Using a Custom Admin Class
+### Using Unfold and a shared BaseAdmin
 
-- **Custom Admin Class**: Extend the default admin interface using a custom admin class. This allows you to customize admin panels, control which fields are displayed, customize how lists are filtered, apply ordering, group fields logically, and much more. Django’s modularity allows you to override or add to the configuration of model data as it’s presented in the admin interface, enhancing both usability and functionality.
+- **Unfold first**: use `ModelAdmin` from `unfold.admin` instead of Django's default `admin.ModelAdmin`.
+- **Shared behavior in `BaseAdmin`**: centralize general behavior like page size or default ordering.
 
-Example Django model showing these implementations:
+Example base class for shared behavior:
 
 ```python
-from django.db import models
-from django.contrib import admin
+from import_export.admin import ExportActionMixin
+from unfold.admin import ModelAdmin
 
-class MyModel(models.Model):
-    name = models.CharField(max_length=100, help_text="Enter the full name.")
-    description = models.TextField(help_text="Enter a detailed description.")
 
-    class Meta:
-        verbose_name = "My Model"
-        verbose_name_plural = "My Models"
+class BaseAdmin(ExportActionMixin, ModelAdmin):
+    list_per_page = 10
 
-    def __str__(self):
-        return self.name
+    def get_ordering(self, request):
+        # Respect explicit ordering declared in each admin class.
+        class_ordering = self.__class__.__dict__.get('ordering')
+        if class_ordering:
+            return class_ordering
 
-class MyModelAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
-    search_fields = ['name']
+        model_field_names = {field.name for field in self.model._meta.get_fields()}
+        if 'created_at' in model_field_names:
+            return ('-created_at',)
 
-# Register your models and admin class with the admin site
-admin.site.register(MyModel, MyModelAdmin)
+        # Fallback: newest rows first by primary key for models without created_at.
+        return (f'-{self.model._meta.pk.name}',)
 ```
 
-This example illustrates how to make a Django model and its corresponding admin customization for enhanced interaction through the Django admin site.
+Use this `BaseAdmin` as the parent class for model-specific admins.
+
+### Relations to other models (Admin)
+
+- **Use `autocomplete_fields` for related fields**: improves performance and usability when selecting objects from large tables.
+- **Use `AutocompleteSelectFilter` for related filters**: keeps list filters responsive for `ForeignKey` relations with many options.
+- **Remember required `search_fields`**: the related model admin must define `search_fields` so autocomplete queries can work.
+
+```python
+from django.contrib import admin
+from admin_auto_filters.filters import AutocompleteSelectFilter
+
+from .models import Invoice, Customer
+from .base_admin import BaseAdmin
+
+
+@admin.register(Customer)
+class CustomerAdmin(BaseAdmin):
+    search_fields = ['name', 'email']
+
+
+class CustomerAutocompleteFilter(AutocompleteSelectFilter):
+    title = 'Customer'
+    field_name = 'customer'
+
+
+@admin.register(Invoice)
+class InvoiceAdmin(BaseAdmin):
+    list_display = ['number', 'customer', 'status']
+    autocomplete_fields = ['customer']
+    list_filter = [CustomerAutocompleteFilter, 'status']
+```
